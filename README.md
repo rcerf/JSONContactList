@@ -35,7 +35,8 @@ The interface should be made up of the following:
 Make Address Book accessible by password.
 Encrypt contacts before storing them.
 
-**Templates**
+**Templates:**
+
 Roll my own templateing so I don't need HTML in my js file.
 
 **Form Validation**
