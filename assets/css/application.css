@@ -1,3 +1,64 @@
 body {
   padding-top: 60px;
 }
+
+.navbar {
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 0;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-width: 0 0 1px;
+  border-radius: 2px;
+  min-height: 50px;
+  max-height: 340px;
+  background-color: #222;
+  border-color: #080808
+}
+
+.navbar-header {
+  float: left;
+}
+
+.navbar-title {
+  float: left;
+  height: 50px;
+  padding: 15px 15px;
+  font-size: 18px;
+  line-height: 20px;
+  color: #999;
+}
+
+.navbar-title:hover,
+.navbar-title:focus {
+  color: #fff;
+  background-color: transparent;
+}
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 768px){
+  .navbar-header {
+   float: left;
+  }
+  .container {
+    width: 750px;
+  }
+}
+
+@media (min-width: 992px){
+  .container {
+    width: 970px;
+  }
+}
+
+@media (min-width: 1200px){
+  .container {
+    width: 1170px;
+  }
+}
