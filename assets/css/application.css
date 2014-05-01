@@ -1,4 +1,6 @@
 body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 20px;
   padding-top: 60px;
 }
 
@@ -11,28 +13,34 @@ body {
   border: 1px solid transparent;
   border-width: 0 0 1px;
   border-radius: 2px;
-  min-height: 50px;
-  max-height: 340px;
+  min-height: 40px;
+  max-height: 45px;
   background-color: #222;
   border-color: #080808
 }
 
 .navbar-header {
+  margin-right: auto;
+  margin-left: auto;
   float: left;
 }
 
 .navbar-title {
+  display: block;
   float: left;
   height: 50px;
-  padding: 15px 15px;
+  padding: 10px 20px 10px;
   font-size: 18px;
+  font-weight: 200;
   line-height: 20px;
-  color: #999;
+  text-decoration: none;
+  color: #888;
 }
 
 .navbar-title:hover,
 .navbar-title:focus {
   color: #fff;
+  text-decoration: none;
   background-color: transparent;
 }
 .container {
