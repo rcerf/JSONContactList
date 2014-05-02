@@ -14,12 +14,20 @@ document.addEventListener('DOMContentLoaded', function(){
   ContactManager.mainRegion = mixRegion({});
   ContactManager.mainRegion.addSelector("main-region");
   ContactManager.ContactView = mixItemView({template: "contact-template"});
+  ContactManager.Contact = mixModel({
+    defaults: {
+      firstName: "",
+      lastName: "",
+      phoneNumber: ""
+    }
+  });
+  console.log(ContactManager.Contact);
   ContactManager.on("initialize:after", function(){
-    var alice = {
+    var alice = extend({
     firstName: "Alice",
     lastName: "Arten",
     phoneNumber: "(415) 555-0814"
-    };
+    }, ContactManager.Contact);
     var aliceView = extend({model: alice}, ContactManager.ContactView);
     ContactManager.mainRegion.show(aliceView);
   });
