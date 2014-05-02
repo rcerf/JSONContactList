@@ -13,7 +13,17 @@ document.addEventListener('DOMContentLoaded', function(){
   
   ContactManager.mainRegion = mixRegion({});
   ContactManager.mainRegion.addSelector("main-region");
-  ContactManager.ContactView = mixItemView({template: "contact-template"});
+  ContactManager.ContactView = mixItemView({
+    template: "contact-template",
+    events: {
+      "click p": "alertPhoneNumber"
+    },
+
+    alertPhoneNumber: function(){
+      console.log("alertNumber: ", this);
+      alert(this.model.phoneNumber);
+    }
+  });
   ContactManager.Contact = mixModel({
     defaults: {
       firstName: "",
@@ -21,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function(){
       phoneNumber: ""
     }
   });
-  console.log(ContactManager.Contact);
   ContactManager.on("initialize:after", function(){
     var alice = extend({
     firstName: "Alice",

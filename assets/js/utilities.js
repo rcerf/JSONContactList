@@ -40,17 +40,51 @@ var template = function(model, node){
   return newElements;
 };
 
+var bindDOMEventListeners = function(itemView){
+  var events = itemView._events;
+  var eventTypes = /click/g;
+  for(var key in events){
+    var eventName = key;
+    var callbacks = events[key];
+    if(eventTypes.test(eventName)){
+      for(var i=0; i<callbacks.length; i++){
+        var callback = callbacks[i];
+        console.log("ITEMVIEW: ", itemView);
+        addDOMEventListener(itemView, eventName, callback);
+      };
+    };
+  };
+};
+
+var addDOMEventListener = function(itemView, eventName, callback){
+  var eventNameArray = eventName.split(" ");
+  var eventType = eventNameArray[0].trim().toLowerCase();
+  var tagName = eventNameArray[1].trim().toLowerCase();
+  var boundCallback = callback.bind(itemView);
+  var node = itemView._cachedTemplate;
+  var targetNodes = node.getElementsByTagName(tagName);
+  for(var i = 0; i<targetNodes.length; i++){
+    targetNodes[i].addEventListener(eventType, boundCallback);
+  };
+};
+
+
 // Eventing system mix-in
 var mixEvents = function(obj){
   obj = obj || {};
   obj._events = {};
 
   obj.on = function(eventName, callback){
+    if(typeof callback === "string"){
+      callback = this[callback];
+    }
+    callback = callback.bind(this);
     if(this._events[eventName] === undefined) {
       this._events[eventName] = [callback];
     } else {
       this._events[eventName].push(callback);
     }
+    console.log("eventName: ", eventName);
   };
 
   obj.trigger = function(eventName) {

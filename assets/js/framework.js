@@ -6,10 +6,10 @@ var mixRegion = function(obj) {
   };
   obj.show = function(itemView){
     //itemView = template(itemView.template);
-    var nodes = itemView.getCachedTemplate();
-    for(var i=0; i<nodes.length; i++){
-      this._selector.appendChild(nodes[i]);
-    };
+    var node = itemView.getCachedTemplate();
+    console.log("SHOW: ", node);
+    this._selector.appendChild(node);
+    bindDOMEventListeners(itemView);
   };
 
   return obj;
@@ -17,17 +17,34 @@ var mixRegion = function(obj) {
 
 var mixItemView = function(obj){
   obj = obj || {};
+  //add eventing system
+  obj = mixEvents(obj);
 
-  obj._cachedTemplate;
+  //Declare Custom Private Variables
   obj._selectedTemplate;
+  obj.el = obj.el || "div";
+  obj.elNode = document.createElement(obj.el);
+  obj._cachedTemplate = obj.elNode;
 
   //won't be called if obj.template is set without calling the mixin
   function setSelectedTemplate(){
-    if(!obj.template) {
-      console.log("You must set template property on ItemView.");
-      return;
-    }
     this._selectedTemplate = document.getElementById(obj.template);
+  };
+
+  function addEvents(){
+    console.log("OBJEVENTS", this.events);
+    var events = this.events;
+    for(key in events){
+      this.on(key, events[key])
+    };
+  };
+
+  if(obj.template){
+    setSelectedTemplate.call(obj);
+  };
+
+  if(obj.events){
+    addEvents.call(obj);
   };
 
   obj.getCachedTemplate = function(){
@@ -35,13 +52,15 @@ var mixItemView = function(obj){
       console.log("You need to set a model and/or a template on this ItemView before you can render!");
       return;
     }
-    if(!this._cachedTemplate){
-      if(!this.hasOwnProperty("_selectedTemplate")){
-        setSelectedTemplate.call(this);
-      };
-
-      this._cachedTemplate = template(this.model, this._selectedTemplate);
-    }
+    if(!this.hasOwnProperty("_selectedTemplate")){
+      setSelectedTemplate.call(this);
+    };
+    var childNodes = template(this.model, this._selectedTemplate);
+    for(var i = 0; i<childNodes.length; i++){
+      console.log("CACHED: ", this._cachedTemplate);
+      console.log("CHildnode: ", childNodes[i]);
+      this._cachedTemplate.appendChild(childNodes[i]);
+    };
     return this._cachedTemplate;
   }
   return obj;
