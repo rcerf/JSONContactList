@@ -11,13 +11,17 @@ document.addEventListener('DOMContentLoaded', function(){
     this.trigger("initialize:after");
   }
   
-  ContactManager.mainRegion = document.getElementById("main-region");
-  ContactManager.staticView = document.getElementById("static-template");
+  ContactManager.mainRegion = mixRegion({});
+  ContactManager.mainRegion.addSelector("main-region");
+  ContactManager.ContactView = mixItemView({template: "contact-template"});
   ContactManager.on("initialize:after", function(){
-    var staticView = ContactManager.staticView.cloneNode(true);
-    var newParagraph = document.createElement("p");
-    newParagraph.textContent = "Test Content";
-    ContactManager.mainRegion.appendChild(newParagraph);
+    var alice = {
+    firstName: "Alice",
+    lastName: "Arten",
+    phoneNumber: "(415) 555-0814"
+    };
+    var aliceView = extend({model: alice}, ContactManager.ContactView);
+    ContactManager.mainRegion.show(aliceView);
   });
 
   // Start app
