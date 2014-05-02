@@ -49,7 +49,6 @@ var bindDOMEventListeners = function(itemView){
     if(eventTypes.test(eventName)){
       for(var i=0; i<callbacks.length; i++){
         var callback = callbacks[i];
-        console.log("ITEMVIEW: ", itemView);
         addDOMEventListener(itemView, eventName, callback);
       };
     };
@@ -78,13 +77,11 @@ var mixEvents = function(obj){
     if(typeof callback === "string"){
       callback = this[callback];
     }
-    callback = callback.bind(this);
     if(this._events[eventName] === undefined) {
       this._events[eventName] = [callback];
     } else {
       this._events[eventName].push(callback);
     }
-    console.log("eventName: ", eventName);
   };
 
   obj.trigger = function(eventName) {

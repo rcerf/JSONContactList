@@ -20,8 +20,7 @@ document.addEventListener('DOMContentLoaded', function(){
     },
 
     alertPhoneNumber: function(){
-      console.log("alertNumber: ", this);
-      alert(this.model.phoneNumber);
+      alert(this.model.get("phoneNumber"));
     }
   });
   ContactManager.Contact = mixModel({

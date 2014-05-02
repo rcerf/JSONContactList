@@ -7,7 +7,6 @@ var mixRegion = function(obj) {
   obj.show = function(itemView){
     //itemView = template(itemView.template);
     var node = itemView.getCachedTemplate();
-    console.log("SHOW: ", node);
     this._selector.appendChild(node);
     bindDOMEventListeners(itemView);
   };
@@ -32,7 +31,6 @@ var mixItemView = function(obj){
   };
 
   function addEvents(){
-    console.log("OBJEVENTS", this.events);
     var events = this.events;
     for(key in events){
       this.on(key, events[key])
@@ -57,8 +55,6 @@ var mixItemView = function(obj){
     };
     var childNodes = template(this.model, this._selectedTemplate);
     for(var i = 0; i<childNodes.length; i++){
-      console.log("CACHED: ", this._cachedTemplate);
-      console.log("CHildnode: ", childNodes[i]);
       this._cachedTemplate.appendChild(childNodes[i]);
     };
     return this._cachedTemplate;
@@ -68,6 +64,11 @@ var mixItemView = function(obj){
 
 var mixModel = function(obj){
   obj = obj || {};
+
+  obj.get = function(propertyName){
+    return this[propertyName];
+  }
+
   if(obj.defaults){
     extend(obj, obj.defaults);
   }
