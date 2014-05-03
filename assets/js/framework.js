@@ -1,29 +1,70 @@
 var mixRegion = function(obj) {
+  var args = Array.prototype.slice.call(arguments, 0);
   obj = obj || {};
+  if(args.length > 1){
+    obj = extend(obj, args);
+  };
+
   obj._selector;
+
   obj.addSelector = function(id){
     this._selector = document.getElementById(id);
   };
-  obj.show = function(itemView){
-    //itemView = template(itemView.template);
-    var node = itemView.getCachedTemplate();
-    this._selector.appendChild(node);
-    bindDOMEventListeners(itemView);
+
+  obj.show = function(view){
+    this._selector.appendChild(view.render());
+    //var node = view.getCachedTemplate();
+    //this._selector.appendChild(node);
+    bindDOMEventListeners(view);
   };
 
   return obj;
 };
 
 var mixItemView = function(obj){
+  var args = Array.prototype.slice.call(arguments, 0);
+  if(args.length > 1){
+    obj = extend({}, args);
+  };
+
   obj = obj || {};
-  //add eventing system
-  obj = mixEvents(obj);
+
+  if(!obj.hasOwnProperty("_events")){
+    //add eventing system
+    obj = mixEvents(obj);
+  }
+
+  if(obj.hasOwnProperty("tagName")){
+    obj.el = obj.tagName;
+  };
 
   //Declare Custom Private Variables
-  obj._selectedTemplate;
-  obj.el = obj.el || "div";
+  obj.el = "div"
   obj.elNode = document.createElement(obj.el);
+  obj._selectedTemplate;
   obj._cachedTemplate = obj.elNode;
+
+  obj.render = function(){
+    return this.getCachedTemplate();
+  };
+
+  obj.getCachedTemplate = function(){
+    if(!this.model || !this.template){
+      console.log("You need to set a model and/or a template on this ItemView before you can render!");
+      return;
+    } else {
+      if(!this.hasOwnProperty("_selectedTemplate")){
+        setSelectedTemplate.call(this);
+      };
+
+      var childNodes = template(this.model, this._selectedTemplate);
+
+      for(var i = 0; i<childNodes.length; i++){
+        this._cachedTemplate.appendChild(childNodes[i]);
+      };
+      return this._cachedTemplate;
+    };
+  };
 
   //won't be called if obj.template is set without calling the mixin
   function setSelectedTemplate(){
@@ -37,41 +78,110 @@ var mixItemView = function(obj){
     };
   };
 
-  if(obj.template){
+  if(obj.hasOwnProperty("template")){
     setSelectedTemplate.call(obj);
   };
 
-  if(obj.events){
+  if(obj.hasOwnProperty("events")){
     addEvents.call(obj);
   };
 
-  obj.getCachedTemplate = function(){
-    if(!this.model || !this.template){
-      console.log("You need to set a model and/or a template on this ItemView before you can render!");
-      return;
-    }
-    if(!this.hasOwnProperty("_selectedTemplate")){
-      setSelectedTemplate.call(this);
+  return obj;
+};
+
+var mixCollectionView = function(obj){
+  var args = Array.prototype.slice.call(arguments, 1);
+  obj = obj || {};
+
+  obj.createItemViewCollection = function(){
+    var models = this.collection.get("modelCollection");
+    this.itemViewCollection = [];
+
+    for(var i=0; i<models.length; i++){
+      var tempItemView = mixItemView({model: models[i]}, this.itemView)
+      //save a collection of itemViews in the CollectionView
+      this.itemViewCollection.push(tempItemView);
     };
-    var childNodes = template(this.model, this._selectedTemplate);
-    for(var i = 0; i<childNodes.length; i++){
-      this._cachedTemplate.appendChild(childNodes[i]);
+  };
+
+  obj.render = function(){
+    if(!this.hasOwnProperty("collection") || !this.hasOwnProperty("itemView")){
+      console.log("No collection and/or itemView property set on CollectionView.")
+    } else {
+      //TODO: opportunistically create itemViewCollection
+      this.createItemViewCollection();
+      //TODO: sort method for collection
+      for(var i=0; i<this.itemViewCollection.length; i++){
+        // call render on each Itemview and append it to collection node
+        var itemView = this.itemViewCollection[i];
+        this._cachedTemplate.appendChild(itemView.render());
+      };
     };
     return this._cachedTemplate;
-  }
+  };
+
+  // auto extend if more than one object is passed in
+  if(args.length > 0){
+    obj = extend(obj, args);
+  };
+
+  obj = extend(obj, mixItemView({}));
   return obj;
 };
 
 var mixModel = function(obj){
+  var args = Array.prototype.slice.call(arguments, 0);
   obj = obj || {};
 
   obj.get = function(propertyName){
     return this[propertyName];
-  }
+  };
 
-  if(obj.defaults){
+  if(args.length > 0){
+    obj = extend(obj, args);
+  };
+
+  if(obj.hasOwnProperty("defaults")){
     extend(obj, obj.defaults);
-  }
+  };
+
+  return obj;
+};
+
+var mixCollection = function(obj){
+  var args = Array.prototype.slice.call(arguments, 0);
+
+  if(args.length > 1 && Array.isArray(args[0])){
+    obj = {};
+    // if first arg is Array make assume it's a modelsArray
+    obj.modelsArray = args[0];
+    args = args.slice(1);
+  };
+
+  obj = obj || {};
+  obj.modelCollection = [];
+
+  obj.createCollection = function(arr){
+    if(!this.hasOwnProperty("model")){
+      console.log("Must set the collections model first");
+      return;
+    };
+    for(var i=0; i<arr.length; i++){
+      // Create Models from Array and push into modelCollection
+      this.modelCollection.push(this.createModel(arr[i]));
+    };
+  };
+
+  obj.createModel = function(obj){
+    return mixModel(obj, this.model);
+  };
+
+  obj = extend(obj, args, mixModel(obj));
+
+  if(obj.hasOwnProperty("modelsArray") && obj.hasOwnProperty("model")){
+    obj.createCollection(obj.modelsArray);
+  };
+
   return obj;
 };
 

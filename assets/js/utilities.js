@@ -1,11 +1,22 @@
 var extend = function(destination){
   var sources = Array.prototype.slice.call(arguments, 1);
+
   for(var i = 0; i<sources.length; i++){
-    var source = sources[i];
-    for(var key in source){
-      destination[key] = destination[key] || source[key];
-    }
-  }
+    var arg = sources[i];
+    if(Array.isArray(arg)){
+      for(var j=0; j<arg.length; j++){
+        var source = arg[j];
+        for(var key in source){
+          destination[key] = destination[key] || source[key];
+        };
+      };
+    }else{
+      var source = sources[i];
+      for(var key in source){
+        destination[key] = destination[key] || source[key];
+      };
+    };
+  };
   return destination;
 };
 
@@ -71,6 +82,7 @@ var addDOMEventListener = function(itemView, eventName, callback){
 // Eventing system mix-in
 var mixEvents = function(obj){
   obj = obj || {};
+
   obj._events = {};
 
   obj.on = function(eventName, callback){
