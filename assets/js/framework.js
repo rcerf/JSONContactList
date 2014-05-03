@@ -12,8 +12,8 @@ var mixRegion = function(obj) {
   };
 
   obj.show = function(view){
-    this._selector.appendChild(view.render());
-    bindDOMEventListeners(view);
+    var nodeTree = view.render();
+    this._selector.appendChild(nodeTree);
   };
 
   return obj;
@@ -46,6 +46,9 @@ var mixItemView = function(obj){
     var childNodes = template(this.model, this._selectedTemplate);
     this._cachedTemplate = document.createElement(this.el || "div");
     for(var i = 0; i<childNodes.length; i++){
+      if(this._events){
+        bindDOMEventListeners(this, childNodes[i]);
+      };
       this._cachedTemplate.appendChild(childNodes[i]);
     };
     return this._cachedTemplate;
@@ -72,23 +75,28 @@ var mixCollectionView = function(obj){
     };
   };
 
+  obj.iterateSortItemViewCollection = function(callback, sort){
+    this.itemViewCollection || this.createItemViewCollection();
+    //TODO: sort method for collection
+    for(var i=0; i<this.itemViewCollection.length; i++){
+      var itemView = this.itemViewCollection[i];
+      callback.call(this, itemView);
+    };
+  };
+
   obj.render = function(){
     if(!this.hasOwnProperty("collection") || !this.hasOwnProperty("itemView")){
       console.log("No collection and/or itemView property set on CollectionView.")
     }
-    //TODO: opportunistically create itemViewCollection
-    this.createItemViewCollection();
-    //TODO: sort method for collection
     this._cachedTemplate = document.createElement(this.el);
-    for(var i=0; i<this.itemViewCollection.length; i++){
-      // call render on each Itemview and append it to collection node
-      var itemView = this.itemViewCollection[i];
-      var childNodes = itemView.render().childNodes
+    this.iterateSortItemViewCollection(function(itemView){
+      var childNodes = itemView.render().childNodes;
       for(var j=0; j<childNodes.length; j++){
+        // call render on each Itemview and append it to collection node
         var childNode = childNodes[j];
         this._cachedTemplate.appendChild(childNode);
-      }
-    };
+      };
+    });
     return this._cachedTemplate;
   };
 

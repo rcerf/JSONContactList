@@ -51,7 +51,7 @@ var template = function(model, node){
   return newElements;
 };
 
-var bindDOMEventListeners = function(itemView){
+var bindDOMEventListeners = function(itemView, rootNode){
   var events = itemView._events;
   var eventTypes = /click/g;
   for(var key in events){
@@ -60,19 +60,21 @@ var bindDOMEventListeners = function(itemView){
     if(eventTypes.test(eventName)){
       for(var i=0; i<callbacks.length; i++){
         var callback = callbacks[i];
-        addDOMEventListener(itemView, eventName, callback);
+        addDOMEventListener(itemView, eventName, rootNode, callback);
       };
     };
   };
 };
 
-var addDOMEventListener = function(itemView, eventName, callback){
+var addDOMEventListener = function(itemView, eventName, rootNode, callback){
   var eventNameArray = eventName.split(" ");
   var eventType = eventNameArray[0].trim().toLowerCase();
   var tagName = eventNameArray[1].trim().toLowerCase();
   var boundCallback = callback.bind(itemView);
-  var node = itemView._cachedTemplate;
-  var targetNodes = node.getElementsByTagName(tagName);
+  if(rootNode.tagName === tagName.toUpperCase()){
+    rootNode.addEventListener(eventType, boundCallback);
+  };
+  var targetNodes = rootNode.getElementsByTagName(tagName);
   for(var i = 0; i<targetNodes.length; i++){
     targetNodes[i].addEventListener(eventType, boundCallback);
   };
