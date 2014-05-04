@@ -2,7 +2,7 @@ var mixRegion = function(obj) {
   var args = Array.prototype.slice.call(arguments, 0);
   obj = obj || {};
   if(args.length > 1){
-    obj = extend(obj, args);
+    obj = util.extend(obj, args);
   };
 
   obj._selector;
@@ -22,7 +22,7 @@ var mixRegion = function(obj) {
 var mixItemView = function(obj){
   var args = Array.prototype.slice.call(arguments, 0);
   if(args.length > 1){
-    obj = extend({}, args);
+    obj = util.extend({}, args);
   };
   obj = obj || {};
 
@@ -43,11 +43,11 @@ var mixItemView = function(obj){
       return;
     };
     this._selectedTemplate = this.template && document.getElementById(this.template);
-    var childNodes = template(this.model, this._selectedTemplate);
+    var childNodes = util.template(this.model, this._selectedTemplate);
     this._cachedTemplate = document.createElement(this.el || "div");
     for(var i = 0; i<childNodes.length; i++){
       if(this._events){
-        bindDOMEventListeners(this, childNodes[i]);
+        util.bindDOMEventListeners(this, childNodes[i]);
       };
       this._cachedTemplate.appendChild(childNodes[i]);
     };
@@ -55,7 +55,7 @@ var mixItemView = function(obj){
   };
 
   // add event system if not already present
-  obj._events || mixEvents(obj) && obj.events && obj.addEvents();
+  obj._events || util.mixEvents(obj) && obj.events && obj.addEvents();
   obj.el = obj.tagName || obj.el || "div";
 
   return obj;
@@ -103,9 +103,9 @@ var mixCollectionView = function(obj){
 
   obj = mixItemView(obj);
 
-  // auto extend if more than one object is passed in
+  // auto util.extend if more than one object is passed in
   if(args.length > 0){
-    obj = extend(obj, args);
+    obj = util.extend(obj, args);
   };
 
   obj.el = obj.tagName || obj.el || "div";
@@ -126,11 +126,11 @@ var mixModel = function(obj){
   };
 
   if(args.length > 0){
-    obj = extend(obj, args);
+    obj = util.extend(obj, args);
   };
 
   if(obj.hasOwnProperty("defaults")){
-    extend(obj, obj.defaults);
+    util.extend(obj, obj.defaults);
   };
 
   return obj;
@@ -170,7 +170,7 @@ var mixCollection = function(obj){
     return mixModel(obj, this.model);
   };
 
-  obj = extend(obj, args, mixModel(obj));
+  obj = util.extend(obj, args, mixModel(obj));
 
   //if(obj.hasOwnProperty("modelsArray") && obj.hasOwnProperty("model")){
    // obj.createCollection.call(obj, obj.modelsArray);
@@ -178,4 +178,9 @@ var mixCollection = function(obj){
 
   return obj;
 };
+
+var mixModule = function(obj){
+
+
+}
 

@@ -1,4 +1,5 @@
-var extend = function(destination){
+util = {};
+util.extend = function(destination){
   var sources = Array.prototype.slice.call(arguments, 1);
 
   for(var i = 0; i<sources.length; i++){
@@ -21,7 +22,7 @@ var extend = function(destination){
 };
 
 // fix so that it detects tags, creates elements and then adds textContent
-var template = function(model, node){
+util.template = function(model, node){
   //clone node
   var newNode = node.cloneNode(true);
   var newElements = [];
@@ -51,7 +52,7 @@ var template = function(model, node){
   return newElements;
 };
 
-var bindDOMEventListeners = function(itemView, rootNode){
+util.bindDOMEventListeners = function(itemView, rootNode){
   var events = itemView._events;
   var eventTypes = /click/g;
   for(var key in events){
@@ -60,13 +61,13 @@ var bindDOMEventListeners = function(itemView, rootNode){
     if(eventTypes.test(eventName)){
       for(var i=0; i<callbacks.length; i++){
         var callback = callbacks[i];
-        addDOMEventListener(itemView, eventName, rootNode, callback);
+        util.addDOMEventListener(itemView, eventName, rootNode, callback);
       };
     };
   };
 };
 
-var addDOMEventListener = function(itemView, eventName, rootNode, callback){
+util.addDOMEventListener = function(itemView, eventName, rootNode, callback){
   var eventNameArray = eventName.split(" ");
   var eventType = eventNameArray[0].trim().toLowerCase();
   var tagName = eventNameArray[1].trim().toLowerCase();
@@ -82,7 +83,7 @@ var addDOMEventListener = function(itemView, eventName, rootNode, callback){
 
 
 // Eventing system mix-in
-var mixEvents = function(obj){
+util.mixEvents = function(obj){
   obj = obj || {};
 
   obj._events = {};
