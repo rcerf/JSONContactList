@@ -56,6 +56,7 @@ var mixItemView = function(obj){
 
   // add event system if not already present
   obj._events || mixEvents(obj) && obj.events && obj.addEvents();
+  obj.el = obj.tagName || obj.el || "div";
 
   return obj;
 };
@@ -75,7 +76,7 @@ var mixCollectionView = function(obj){
     };
   };
 
-  obj.iterateSortItemViewCollection = function(callback, sort){
+  obj.iterateSortItemViewCollection = function(callback){
     this.itemViewCollection || this.createItemViewCollection();
     //TODO: sort method for collection
     for(var i=0; i<this.itemViewCollection.length; i++){
@@ -118,6 +119,9 @@ var mixModel = function(obj){
   obj = obj || {};
 
   obj.get = function(propertyName){
+    if(propertyName === "modelCollection"){
+      this.createCollection(this.modelsArray);
+    };
     return this[propertyName];
   };
 
@@ -143,13 +147,19 @@ var mixCollection = function(obj){
   };
 
   obj = obj || {};
-  obj.modelCollection = [];
 
   obj.createCollection = function(arr){
     if(!this.hasOwnProperty("model")){
       console.log("Must set the collections model first");
       return;
     };
+    if(this.hasOwnProperty("comparator")){
+      var sorter = function(a,b){
+          return a[this.comparator] < b[this.comparator] ? -1 : 1;
+      };
+      arr.sort(sorter.bind(this));
+    };
+    this.modelCollection = [];
     for(var i=0; i<arr.length; i++){
       // Create Models from Array and push into modelCollection
       this.modelCollection.push(this.createModel(arr[i]));
@@ -162,9 +172,9 @@ var mixCollection = function(obj){
 
   obj = extend(obj, args, mixModel(obj));
 
-  if(obj.hasOwnProperty("modelsArray") && obj.hasOwnProperty("model")){
-    obj.createCollection(obj.modelsArray);
-  };
+  //if(obj.hasOwnProperty("modelsArray") && obj.hasOwnProperty("model")){
+   // obj.createCollection.call(obj, obj.modelsArray);
+  //};
 
   return obj;
 };

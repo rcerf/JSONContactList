@@ -21,7 +21,8 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   });
   ContactManager.ContactCollection = mixCollection({
-    model: ContactManager.Contact
+    model: ContactManager.Contact,
+    comparator: "firstName"
   });
 
   ContactManager.ContactItemView = mixItemView({
@@ -47,11 +48,6 @@ document.addEventListener('DOMContentLoaded', function(){
       phoneNumber: "(415) 555-0814"
       },
       {
-      firstName: "Brett",
-      lastName: "Memsic",
-      phoneNumber: "(415) 555-0001"
-      },
-      {
       firstName: "Julia",
       lastName: "Carnevale",
       phoneNumber: "(415) 555-0002"
@@ -60,7 +56,12 @@ document.addEventListener('DOMContentLoaded', function(){
       firstName: "Rick",
       lastName: "Cerf",
       phoneNumber: "(415) 555-0003"
-     }
+     },
+      {
+      firstName: "Brett",
+      lastName: "Memsic",
+      phoneNumber: "(415) 555-0001"
+      }
     ], ContactManager.ContactCollection);
 
     var contactsListView = mixCollectionView({
