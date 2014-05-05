@@ -23,8 +23,12 @@ framework.mixApp = function(obj){
   };
 
   obj.module = function(moduleName, callback){
-    this[moduleName] = {};
-    callback(this[moduleName], this, framework, util);
+    var moduleNameArray = moduleName.split(".");
+    var container = this;
+    for(var i=0; i<moduleNameArray.length; i++){
+      container = container[moduleNameArray[i]] = {};
+    };
+    callback(container, this, framework, util);
   };
 
   return obj;
