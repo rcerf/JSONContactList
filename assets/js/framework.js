@@ -8,19 +8,34 @@ framework.mixApp = function(obj){
     this.trigger("initialize:after");
   };
 
+  obj.addRegions = function(obj){
+    var app = this;
+    for(var key in obj){
+      app[key] = framework.mixRegion({}, obj[key]);
+      var addSelector = function(){
+        this[key].addSelector();
+      };
+      var boundAddSelector = addSelector.bind(this);
+      app.on("initialize:after", function(){
+        boundAddSelector();
+      });
+    }
+  };
+
+  obj.module = function(moduleName, callback){
+    this[moduleName] = {};
+    callback(this[moduleName], this, framework, util);
+  };
+
   return obj;
 };
 
-framework.mixRegion = function(obj) {
-  var args = Array.prototype.slice.call(arguments, 0);
+framework.mixRegion = function(obj, id) {
+  var id = id.slice(1);
   obj = obj || {};
-  if(args.length > 1){
-    obj = util.extend(obj, args);
-  };
-
   obj._selector;
 
-  obj.addSelector = function(id){
+  obj.addSelector = function(){
     this._selector = document.getElementById(id);
   };
 

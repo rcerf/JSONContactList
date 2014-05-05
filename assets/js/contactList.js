@@ -1,8 +1,8 @@
-ContactManager.mainRegion = framework.mixRegion({});
+ContactManager.addRegions({
+  mainRegion: "#main-region"
+});
 
-ContactManager.Entities = {};
-// moduel currently refers to a function that creates ContactManager.Entities
-ContactManager.module = function(Entities, ContactManager, framework, util){
+ContactManager.module("Entities", function(Entities, ContactManager, framework, util){
 
   var contacts;
 
@@ -42,9 +42,7 @@ ContactManager.module = function(Entities, ContactManager, framework, util){
   ContactManager.reqres.setHandler("contact:entities", function(){
     return API.getContactEntities();
   });
-
-  return ContactManager.Entities;
-}(ContactManager.Entities, ContactManager, framework, util);
+});
 
 ContactManager.ContactItemView = framework.mixItemView({
   template: "contact-list-item",
@@ -72,7 +70,7 @@ ContactManager.on("initialize:after", function(){
 });
 
 document.addEventListener('DOMContentLoaded', function(){
-  ContactManager.mainRegion.addSelector("main-region");
+  //ContactManager.mainRegion.addSelector("main-region");
 
   // Start app
   ContactManager.start();
