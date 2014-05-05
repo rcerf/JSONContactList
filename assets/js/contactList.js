@@ -1,17 +1,23 @@
-ContactManager.mainRegion = mixRegion({});
-ContactManager.Contact = mixModel({
-  defaults: {
-    firstName: "",
-    lastName: "",
-    phoneNumber: ""
-  }
-});
-ContactManager.ContactCollection = mixCollection({
-  model: ContactManager.Contact,
-  comparator: "firstName"
-});
+ContactManager.mainRegion = framework.mixRegion({});
 
-ContactManager.ContactItemView = mixItemView({
+ContactManager.Entities = {};
+ContactManager.module = function(Entities, ContactManager, framework, util){
+  Entities.Contact = framework.mixModel({
+    defaults: {
+      firstName: "",
+      lastName: "",
+      phoneNumber: ""
+    }
+  });
+  Entities.ContactCollection = framework.mixCollection({
+    model: ContactManager.Contact,
+    comparator: "firstName"
+  });
+
+  return ContactManager.Entities;
+}(ContactManager, ContactManager, framework, util);
+
+ContactManager.ContactItemView = framework.mixItemView({
   template: "contact-list-item",
   events: {
     "click li": "alertPhoneNumber"
@@ -22,13 +28,13 @@ ContactManager.ContactItemView = mixItemView({
   }
 });
 
-ContactManager.ContactsView = mixCollectionView({
+ContactManager.ContactsView = framework.mixCollectionView({
   tagName: "ul",
   itemView: ContactManager.ContactItemView
 });
 
 ContactManager.on("initialize:after", function(){
-  var contacts = mixCollection([{
+  var contacts = framework.mixCollection([{
     firstName: "Alice",
     lastName: "Arten",
     phoneNumber: "(415) 555-0814"
@@ -50,7 +56,7 @@ ContactManager.on("initialize:after", function(){
     }
   ], ContactManager.ContactCollection);
 
-  var contactsListView = mixCollectionView({
+  var contactsListView = framework.mixCollectionView({
     collection: contacts
   }, ContactManager.ContactsView);
 
@@ -58,8 +64,8 @@ ContactManager.on("initialize:after", function(){
 });
 
 document.addEventListener('DOMContentLoaded', function(){
-  //binds to DOM element so must be present before it's called
   ContactManager.mainRegion.addSelector("main-region");
+
   // Start app
   ContactManager.start();
 });

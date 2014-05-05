@@ -1,4 +1,5 @@
-var mixRegion = function(obj) {
+var framework = {};
+framework.mixRegion = function(obj) {
   var args = Array.prototype.slice.call(arguments, 0);
   obj = obj || {};
   if(args.length > 1){
@@ -19,7 +20,7 @@ var mixRegion = function(obj) {
   return obj;
 };
 
-var mixItemView = function(obj){
+framework.mixItemView = function(obj){
   var args = Array.prototype.slice.call(arguments, 0);
   if(args.length > 1){
     obj = util.extend({}, args);
@@ -61,7 +62,7 @@ var mixItemView = function(obj){
   return obj;
 };
 
-var mixCollectionView = function(obj){
+framework.mixCollectionView = function(obj){
   var args = Array.prototype.slice.call(arguments, 1);
   obj = obj || {};
 
@@ -70,7 +71,7 @@ var mixCollectionView = function(obj){
     this.itemViewCollection = [];
 
     for(var i=0; i<models.length; i++){
-      var tempItemView = mixItemView({model: models[i]},this.itemView)
+      var tempItemView = framework.mixItemView({model: models[i]},this.itemView)
       //save a collection of itemViews in the CollectionView
       this.itemViewCollection.push(tempItemView);
     };
@@ -101,7 +102,7 @@ var mixCollectionView = function(obj){
     return this._cachedTemplate;
   };
 
-  obj = mixItemView(obj);
+  obj = framework.mixItemView(obj);
 
   // auto util.extend if more than one object is passed in
   if(args.length > 0){
@@ -114,7 +115,7 @@ var mixCollectionView = function(obj){
   return obj;
 };
 
-var mixModel = function(obj){
+framework.mixModel = function(obj){
   var args = Array.prototype.slice.call(arguments, 0);
   obj = obj || {};
 
@@ -136,7 +137,7 @@ var mixModel = function(obj){
   return obj;
 };
 
-var mixCollection = function(obj){
+framework.mixCollection = function(obj){
   var args = Array.prototype.slice.call(arguments, 0);
 
   if(args.length > 1 && Array.isArray(args[0])){
@@ -167,10 +168,10 @@ var mixCollection = function(obj){
   };
 
   obj.createModel = function(obj){
-    return mixModel(obj, this.model);
+    return framework.mixModel(obj, this.model);
   };
 
-  obj = util.extend(obj, args, mixModel(obj));
+  obj = util.extend(obj, args, framework.mixModel(obj));
 
   //if(obj.hasOwnProperty("modelsArray") && obj.hasOwnProperty("model")){
    // obj.createCollection.call(obj, obj.modelsArray);
@@ -178,9 +179,4 @@ var mixCollection = function(obj){
 
   return obj;
 };
-
-var mixModule = function(obj){
-
-
-}
 
