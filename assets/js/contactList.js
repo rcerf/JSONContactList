@@ -10,12 +10,12 @@ ContactManager.module = function(Entities, ContactManager, framework, util){
     }
   });
   Entities.ContactCollection = framework.mixCollection({
-    model: ContactManager.Contact,
+    model: Entities.Contact,
     comparator: "firstName"
   });
 
   return ContactManager.Entities;
-}(ContactManager, ContactManager, framework, util);
+}(ContactManager.Entities, ContactManager, framework, util);
 
 ContactManager.ContactItemView = framework.mixItemView({
   template: "contact-list-item",
@@ -54,7 +54,7 @@ ContactManager.on("initialize:after", function(){
     lastName: "Memsic",
     phoneNumber: "(415) 555-0001"
     }
-  ], ContactManager.ContactCollection);
+  ], ContactManager.Entities.ContactCollection);
 
   var contactsListView = framework.mixCollectionView({
     collection: contacts
