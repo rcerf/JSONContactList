@@ -1,4 +1,39 @@
 var framework = {};
+framework.mixApp = function(obj){
+  obj = obj || {};
+  util.mixEvents(obj);
+
+  obj.start = function(){
+    this.trigger("initialize:after");
+  };
+
+  obj.reqres = {
+    setHandler: function(handlerName, callback){
+      if(!this.hasOwnProperty("_events")){
+        this._events = {};
+        this.request = function(handlerName){
+          if(!this._events.hasOwnProperty(eventName)){
+            console.log("No such handler set.");
+            return;
+          }
+          for(var i=0; i<this._events[handlerName].length; i++){
+            this._events[eventName][i].apply(this, Array.prototype.slice.call(arguments, 1));
+          }
+        };
+      }
+      if(typeof callback === "string"){
+        callback = this[callback];
+      }
+      if(this._events[handlerName] === undefined){
+        this._events[handlerName] = [callback];
+      } else {
+        this._events[eventName].push(callback);
+      }
+    }
+  }
+  return obj;
+};
+
 framework.mixRegion = function(obj) {
   var args = Array.prototype.slice.call(arguments, 0);
   obj = obj || {};
