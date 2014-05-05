@@ -26,7 +26,8 @@ framework.mixApp = function(obj){
     var moduleNameArray = moduleName.split(".");
     var container = this;
     for(var i=0; i<moduleNameArray.length; i++){
-      container = container[moduleNameArray[i]] = {};
+      container = container[moduleNameArray[i]] ? container[moduleNameArray[i]] : container[moduleNameArray[i]] = {};
+      container;
     };
     callback(container, this, framework, util);
   };
@@ -50,6 +51,11 @@ framework.mixRegion = function(obj, id) {
 
   return obj;
 };
+
+framework.mixController = function(obj){
+  obj = obj || {};
+  return obj;
+}
 
 framework.mixItemView = function(obj){
   var args = Array.prototype.slice.call(arguments, 0);
