@@ -81,6 +81,17 @@ util.addDOMEventListener = function(itemView, eventName, rootNode, callback){
   };
 };
 
+util.addClass = function(el, className){
+  var classNames = className.split(" ");
+  for(var i=0; i<classNames.length; i++){
+    var className = classNames[i];
+    if (el.classList){
+      el.classList.add(className);
+    }else{
+      el.className += ' ' + className;
+    }
+  }
+};
 
 // Eventing system mix-in
 util.mixEvents = function(obj){

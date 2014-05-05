@@ -12,6 +12,7 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, framewo
 
   List.Contacts = framework.mixCollectionView({
     tagName: "table",
+    className: "table table-hover",
     itemView: List.Contact
   });
 

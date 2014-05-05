@@ -89,6 +89,8 @@ framework.mixItemView = function(obj){
       };
       this._cachedTemplate.appendChild(childNodes[i]);
     };
+    this.className && util.addClass(this._cachedTemplate, this.className);
+
     return this._cachedTemplate;
   };
 
@@ -132,6 +134,7 @@ framework.mixCollectionView = function(obj){
       var childNode = itemView.render();
       this._cachedTemplate.appendChild(childNode);
     });
+    this.className && util.addClass(this._cachedTemplate, this.className);
 
     return this._cachedTemplate;
   };
