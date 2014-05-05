@@ -27,7 +27,7 @@ ContactManager.module = function(Entities, ContactManager, framework, util){
         phoneNumber: "(415) 555-0163" },
       { id:3, firstName: "Charlie", lastName: "Campbell",
         phoneNumber: "(415) 555-0129" }
-    ]);
+    ], Entities.ContactCollection);
   };
 
   var API = {
@@ -37,7 +37,11 @@ ContactManager.module = function(Entities, ContactManager, framework, util){
       }
       return contacts;
     }
-  }
+  };
+
+  ContactManager.reqres.setHandler("contact:entities", function(){
+    return API.getContactEntities();
+  });
 
   return ContactManager.Entities;
 }(ContactManager.Entities, ContactManager, framework, util);
@@ -59,28 +63,7 @@ ContactManager.ContactsView = framework.mixCollectionView({
 });
 
 ContactManager.on("initialize:after", function(){
-  var contacts = framework.mixCollection([{
-    firstName: "Alice",
-    lastName: "Arten",
-    phoneNumber: "(415) 555-0814"
-    },
-    {
-    firstName: "Julia",
-    lastName: "Carnevale",
-    phoneNumber: "(415) 555-0002"
-    },
-    {
-    firstName: "Rick",
-    lastName: "Cerf",
-    phoneNumber: "(415) 555-0003"
-    },
-    {
-    firstName: "Brett",
-    lastName: "Memsic",
-    phoneNumber: "(415) 555-0001"
-    }
-  ], ContactManager.Entities.ContactCollection);
-
+  var contacts = ContactManager.request("contact:entities");
   var contactsListView = framework.mixCollectionView({
     collection: contacts
   }, ContactManager.ContactsView);

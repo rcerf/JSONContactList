@@ -112,4 +112,34 @@ util.mixEvents = function(obj){
   return obj;
 };
 
+util.mixReqres = function(obj){
+  obj = obj || {};
+
+
+  obj.reqres = {};
+
+  obj.reqres._reqresStore = {};
+  obj.reqres.setHandler = function(handlerName, callback){
+    if(typeof callback === "string"){
+      callback = this[callback];
+    }
+    if(this._reqresStore[handlerName] === undefined){
+      this._reqresStore[handlerName] = [callback];
+    } else {
+      this._reqresStore[handlerName].push(callback);
+    }
+  };
+
+  obj.request = function(handlerName){
+    if(!this.reqres._reqresStore.hasOwnProperty(handlerName)){
+      console.log("No such handler set.");
+      return;
+    }
+    for(var i=0; i<this.reqres._reqresStore[handlerName].length; i++){
+      return this.reqres._reqresStore[handlerName][i].apply(this, Array.prototype.slice.call(arguments, 1));
+    }
+  };
+
+  return obj;
+}
 
