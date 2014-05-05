@@ -1,10 +1,2 @@
-ContactManager.on("initialize:after", function(){
-  ContactManager.ContactsApp.List.Controller.listContacts();
-});
+ContactManager.start();
 
-document.addEventListener('DOMContentLoaded', function(){
-  //ContactManager.mainRegion.addSelector("main-region");
-
-  // Start app
-  ContactManager.start();
-});
