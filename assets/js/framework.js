@@ -129,13 +129,10 @@ framework.mixCollectionView = function(obj){
     }
     this._cachedTemplate = document.createElement(this.el);
     this.iterateSortItemViewCollection(function(itemView){
-      var childNodes = itemView.render().childNodes;
-      for(var j=0; j<childNodes.length; j++){
-        // call render on each Itemview and append it to collection node
-        var childNode = childNodes[j];
-        this._cachedTemplate.appendChild(childNode);
-      };
+      var childNode = itemView.render();
+      this._cachedTemplate.appendChild(childNode);
     });
+
     return this._cachedTemplate;
   };
 

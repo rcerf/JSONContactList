@@ -1,6 +1,6 @@
 ContactManager.module("ContactsApp.List", function(List, ContactManager, framework, utils){
   List.Contact = framework.mixItemView({
-    tagName: "ul",
+    tagName: "tr",
     template: "contact-list-item",
     events: {
       "click li": "alertPhoneNumber"
@@ -11,7 +11,7 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, framewo
   });
 
   List.Contacts = framework.mixCollectionView({
-    tagName: "ul",
+    tagName: "table",
     itemView: List.Contact
   });
 
