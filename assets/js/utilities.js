@@ -25,31 +25,41 @@ util.extend = function(destination){
 util.template = function(model, node){
   //clone node
   var newNode = node.cloneNode(true);
-  var newElements = [];
   // grab text from node
   var content = newNode.text.trim();
   var interpolateRe = /<%=([\s\S]+?)%>/g;
   var elementTagRe = /<(?!%)([\s\S]+?)>/g;
   var text = />([\s\S]+?)</g;
-  var interpolatedString = content.replace(interpolateRe, function(match, variable, offset){
+
+  var interpolatedString = model ? content.replace(interpolateRe, function(match, variable, offset){
     variable = variable.trim();
     var interp = model[variable];
     return interp;
-  });
+  }) : content;
+
+  var currentElement;
   var last;
+  var lastVariable;
+  var result = [];
+
   interpolatedString.replace(elementTagRe, function(match, variable, offset, string){
     variable = variable.trim();
     if(variable[0] !== "/"){
-      last = offset + match.length;
-      var element = document.createElement(variable);
-      newElements.push(element)
+      if(!currentElement){
+        currentElement = document.createElement(variable);
+        last = offset + match.length;
+        lastVariable = variable;
+      }
     } else{
-      var content = string.substring(last, offset);
-      newElements[newElements.length-1].textContent = content;
+      if(variable.slice(1) === lastVariable){
+        var content = string.substring(last, offset).trim();
+        currentElement.innerHTML = content;
+        result.push(currentElement);
+        currentElement = null;
+      }
     }
   });
-
-  return newElements;
+  return result;
 };
 
 util.bindDOMEventListeners = function(itemView, rootNode){

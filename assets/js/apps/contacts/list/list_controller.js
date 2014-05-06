@@ -3,7 +3,7 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, framewo
     listContacts: function(){
       var contacts = ContactManager.request("contact:entities");
 
-      var contactsListView = framework.mixCollectionView({
+      var contactsListView = framework.mixCompositeView({
         collection: contacts
       }, List.Contacts);
 

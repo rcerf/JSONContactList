@@ -1,7 +1,7 @@
 ContactManager.module("ContactsApp.List", function(List, ContactManager, framework, utils){
   List.Contact = framework.mixItemView({
     tagName: "tr",
-    template: "contact-list-item",
+    template: "#contact-list-item",
     events: {
       "click li": "alertPhoneNumber"
     },
@@ -10,10 +10,13 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, framewo
     }
   });
 
-  List.Contacts = framework.mixCollectionView({
+
+  List.Contacts = framework.mixCompositeView({
     tagName: "table",
     className: "table table-hover",
-    itemView: List.Contact
+    template: "#contact-list",
+    itemView: List.Contact,
+    itemViewContainer: "tbody"
   });
 
 });

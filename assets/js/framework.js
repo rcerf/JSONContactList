@@ -64,10 +64,6 @@ framework.mixItemView = function(obj){
   };
   obj = obj || {};
 
-  obj.render = obj.render || function(){
-    return this.getCachedTemplate();
-  };
-
   obj.addEvents = obj.addEvents || function(){
     var events = this.events;
     for(key in events){
@@ -75,21 +71,38 @@ framework.mixItemView = function(obj){
     };
   };
 
-  obj.getCachedTemplate = obj.getCachedTemplate || function(){
-    if(!this.model || !this.template){
-      console.log("You need to set a model and/or a template on this ItemView before you can render!");
-      return;
-    };
-    this._selectedTemplate = this.template && document.getElementById(this.template);
-    var childNodes = util.template(this.model, this._selectedTemplate);
+  obj.createSelectedTemplate = function(){
+    var cssSymbol = this.template[0];
+    var template = this.template.slice(1);
+    this._selectedTemplate = cssSymbol === "#" ? document.getElementById(template): console.log("Not using CSS Id symbol.");
+  };
+
+  obj.createCachedTemplate = function(){
     this._cachedTemplate = document.createElement(this.el || "div");
+    //add Class to template
+    this.className && util.addClass(this._cachedTemplate, this.className);
+  };
+
+  obj.createEl = function(){
+    //render childNodes
+    var childNodes = util.template(this.model, this._selectedTemplate);
+
     for(var i = 0; i<childNodes.length; i++){
       if(this._events){
         util.bindDOMEventListeners(this, childNodes[i]);
       };
+      //build el tree from childNodes
       this._cachedTemplate.appendChild(childNodes[i]);
     };
-    this.className && util.addClass(this._cachedTemplate, this.className);
+  };
+
+  obj.render = obj.render || function(){
+
+    this.template ? this.createSelectedTemplate() : console.log("Must set template attribute on view");
+
+    this.createCachedTemplate();
+
+    this.model ? this.createEl() : console.log("Must set model on view.")
 
     return this._cachedTemplate;
   };
@@ -116,25 +129,29 @@ framework.mixCollectionView = function(obj){
     };
   };
 
-  obj.iterateSortItemViewCollection = function(callback){
+  obj.iterateItemViewCollection = function(callback){
     this.itemViewCollection || this.createItemViewCollection();
-    //TODO: sort method for collection
     for(var i=0; i<this.itemViewCollection.length; i++){
       var itemView = this.itemViewCollection[i];
       callback.call(this, itemView);
     };
   };
 
-  obj.render = function(){
+  if(obj.render){
+   console.log("Render present");
+  };
+
+  obj.render = obj.render || function(){
     if(!this.hasOwnProperty("collection") || !this.hasOwnProperty("itemView")){
       console.log("No collection and/or itemView property set on CollectionView.")
     }
-    this._cachedTemplate = document.createElement(this.el);
-    this.iterateSortItemViewCollection(function(itemView){
+
+    this.createCachedTemplate();
+
+    this.iterateItemViewCollection(function(itemView){
       var childNode = itemView.render();
       this._cachedTemplate.appendChild(childNode);
     });
-    this.className && util.addClass(this._cachedTemplate, this.className);
 
     return this._cachedTemplate;
   };
@@ -146,8 +163,46 @@ framework.mixCollectionView = function(obj){
     obj = util.extend(obj, args);
   };
 
+  //overwrite el with tagName if one is given
   obj.el = obj.tagName || obj.el || "div";
   obj.elNode = document.createElement(obj.el);
+
+  return obj;
+};
+
+framework.mixCompositeView = function(obj){
+  var args = Array.prototype.slice.call(arguments, 1);
+  obj = obj || {};
+  obj.render = obj.render || function(){
+    this.createCachedTemplate();
+    this.createSelectedTemplate();
+
+    var children = util.template(null, this._selectedTemplate);
+    for(var i=0; i<children.length; i++){
+      var child = children[i];
+      this._cachedTemplate.appendChild(child);
+    }
+
+    this._selector = this.itemViewContainer ? this._cachedTemplate.querySelector(this.itemViewContainer): console.log("No itemViewContainer set");
+
+    this.iterateItemViewCollection(function(itemView){
+      var childNode = itemView.render();
+      this._selector.appendChild(childNode);
+    });
+
+    return this._cachedTemplate;
+  }
+  obj = framework.mixCollectionView(obj);
+
+  // auto util.extend if more than one object is passed in
+  if(args.length > 0){
+    obj = util.extend(obj, args);
+  };
+
+  //overwrite el with tagName if one is given
+  obj.el = obj.tagName || obj.el || "div";
+  obj.elNode = document.createElement(obj.el);
+
 
   return obj;
 };
