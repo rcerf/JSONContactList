@@ -82,12 +82,12 @@ util.addDOMEventListener = function(itemView, eventName, rootNode, callback){
   var eventType = eventNameArray[0].trim().toLowerCase();
   var tagName = eventNameArray[1].trim().toLowerCase();
   var boundCallback = callback.bind(itemView);
-  if(rootNode.tagName === tagName.toUpperCase()){
-    rootNode.addEventListener(eventType, boundCallback);
+  var matchingNodes = rootNode.querySelectorAll(tagName);
+  for(var j=0; j<matchingNodes.length; j++){
+    matchingNode.addEventListener(eventType, boundCallback);
   };
-  var targetNodes = rootNode.getElementsByTagName(tagName);
-  for(var i = 0; i<targetNodes.length; i++){
-    targetNodes[i].addEventListener(eventType, boundCallback);
+  if(rootNode.tagName.toUpperCase() === tagName.toUpperCase()){
+    rootNode.addEventListener(eventType, boundCallback);
   };
 };
 

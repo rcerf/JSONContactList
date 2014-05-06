@@ -40,3 +40,6 @@ Encrypt contacts before storing them.
 Roll my own templateing so I don't need HTML in my js file.
 
 **Form Validation**
+
+## TODOs:
+* [css] add row highlighting on :hover

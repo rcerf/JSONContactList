@@ -3,7 +3,7 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, framewo
     tagName: "tr",
     template: "#contact-list-item",
     events: {
-      "click li": "alertPhoneNumber"
+      "click td": "alertPhoneNumber"
     },
     alertPhoneNumber: function(){
       alert(this.model.get("phoneNumber"));
