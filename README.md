@@ -42,4 +42,6 @@ Roll my own templateing so I don't need HTML in my js file.
 **Form Validation**
 
 ## TODOs:
+* [css] manage column spacing in <table>
 * [css] add row highlighting on :hover
+* [css] add x symbol to delete button

@@ -64,11 +64,12 @@ util.template = function(model, node){
 
 util.bindDOMEventListeners = function(itemView, rootNode){
   var events = itemView._events;
-  var eventTypes = /click/g;
+  var eventTypes = /click/mi;
   for(var key in events){
     var eventName = key;
     var callbacks = events[key];
-    if(eventTypes.test(eventName)){
+    var present = eventTypes.test(eventName);
+    if(present){
       for(var i=0; i<callbacks.length; i++){
         var callback = callbacks[i];
         util.addDOMEventListener(itemView, eventName, rootNode, callback);
@@ -84,7 +85,7 @@ util.addDOMEventListener = function(itemView, eventName, rootNode, callback){
   var boundCallback = callback.bind(itemView);
   var matchingNodes = rootNode.querySelectorAll(tagName);
   for(var j=0; j<matchingNodes.length; j++){
-    matchingNode.addEventListener(eventType, boundCallback);
+    matchingNodes[j].addEventListener(eventType, boundCallback);
   };
   if(rootNode.tagName.toUpperCase() === tagName.toUpperCase()){
     rootNode.addEventListener(eventType, boundCallback);
