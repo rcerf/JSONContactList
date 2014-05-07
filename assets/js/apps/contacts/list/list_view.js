@@ -4,15 +4,16 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, framewo
     template: "#contact-list-item",
     events: {
       "click td": "alertPhoneNumber",
-      "click button .js-delete": "alertDelete"
+      "click button .js-delete": "deleteClicked"
     },
     alertPhoneNumber: function(e){
       alert(this.model.get("phoneNumber"));
     },
-    alertDelete: function(e){
+    deleteClicked: function(e){
       e.preventDefault();
       e.stopPropagation();
-      alert("delete button was clicked");
+      console.log(this.model.id);
+      this.trigger("contact:delete", this.model);
     }
   });
 

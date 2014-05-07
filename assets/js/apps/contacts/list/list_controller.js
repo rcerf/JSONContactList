@@ -7,7 +7,12 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, framewo
         collection: contacts
       }, List.Contacts);
 
+      contactsListView.on("itemview:contact:delete", function(childView, model){
+        contacts.remove(model);
+      });
+
       ContactManager.mainRegion.show(contactsListView);
     }
   });
-}); 
+});
+

@@ -122,8 +122,8 @@ framework.mixCollectionView = function(obj){
     var models = this.collection.get("modelCollection");
     this.itemViewCollection = [];
 
-    for(var i=0; i<models.length; i++){
-      var tempItemView = framework.mixItemView({model: models[i]},this.itemView)
+    for(var key in models){
+      var tempItemView = framework.mixItemView({model: models[key]}, this.itemView)
       //save a collection of itemViews in the CollectionView
       this.itemViewCollection.push(tempItemView);
     };
@@ -212,7 +212,7 @@ framework.mixModel = function(obj){
   obj = obj || {};
 
   obj.get = function(propertyName){
-    if(propertyName === "modelCollection"){
+    if(propertyName === "modelCollection" && !this.modelCollection){
       this.createCollection(this.modelsArray);
     };
     return this[propertyName];
@@ -241,6 +241,15 @@ framework.mixCollection = function(obj){
 
   obj = obj || {};
 
+  obj.remove = function(model){
+    delete this.modelCollection[model.id];
+    //need to trigger a refresh DOM event so the compositeView can:
+    // 1) re-render it's DOM tree passed on new collection
+    // 2) clear current tree from DOM
+    // 3) append new tree to correct region
+    console.log("contact deleted");
+  };
+
   obj.createCollection = function(arr){
     if(!this.hasOwnProperty("model")){
       console.log("Must set the collections model first");
@@ -252,10 +261,15 @@ framework.mixCollection = function(obj){
       };
       arr.sort(sorter.bind(this));
     };
-    this.modelCollection = [];
+    var count = 0;
+    this.modelCollection = {};
     for(var i=0; i<arr.length; i++){
       // Create Models from Array and push into modelCollection
-      this.modelCollection.push(this.createModel(arr[i]));
+      var model = this.createModel(arr[i]);
+      var id = model.id || count;
+      model.id = id;
+      this.modelCollection[id] = model;
+      count++;
     };
   };
 

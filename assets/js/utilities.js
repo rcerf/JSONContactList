@@ -119,6 +119,12 @@ util.mixEvents = function(obj){
     } else {
       this._events[eventName].push(callback);
     }
+    if(/itemview/im.test(eventName) && this.itemView._events){
+      var parentView = this;
+      this.itemView.on(eventName.slice(9), function(){
+        parentView.trigger(eventName, this, arguments[0]);
+      });
+    }
   };
 
   obj.trigger = function(eventName) {
