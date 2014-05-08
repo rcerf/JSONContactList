@@ -116,14 +116,6 @@ framework.mixCollectionView = function(obj){
     return this._cachedTemplate;
   };
 
-  //obj.remove = obj.remove || function(){
-   // this.iterateItemViewCollection(function(itemView){
-    //  var model = arguments[0];
-     // itemView === model && delete itemView;
-     // console.log("View of Item deleted in ItemViewCollection: ", model.id);
-    //})
-  //};
-
   obj = framework.mixItemView(obj);
 
   // auto util.extend if more than one object is passed in

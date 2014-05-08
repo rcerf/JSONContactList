@@ -56,10 +56,6 @@ framework.mixCollection = function(obj){
     var model = this.modelCollection[model.id];
     delete this.modelCollection[model.id];
     this.refreshDOM(model);
-    //need to trigger a refresh DOM event so the compositeView can:
-    // 1) re-render it's DOM tree passed on new collection
-    // 2) clear current tree from DOM
-    // 3) append new tree to correct region
   };
 
   obj.createCollection = function(arr){
