@@ -88,9 +88,12 @@ framework.mixCollectionView = function(obj){
 
   obj.iterateItemViewCollection = function(callback){
     this.itemViewCollection || this.createItemViewCollection();
+    var args = Array.prototype.slice(0);
     for(var i=0; i<this.itemViewCollection.length; i++){
       var itemView = this.itemViewCollection[i];
-      callback.call(this, itemView);
+      args.unshift(itemView);
+      callback.apply(this, args);
+      args.shift();
     };
   };
 
@@ -114,7 +117,7 @@ framework.mixCollectionView = function(obj){
   };
 
   obj.remove = obj.remove || function(){
-    this.iterateItemViewCollection(function(){
+    this.iterateItemViewCollection(function(itemView){
       var model = arguments[0];
       itemView === model && delete itemView;
       console.log("View of Item deleted in ItemViewCollection: ", model.id);

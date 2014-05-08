@@ -141,24 +141,30 @@ util.mixEvents = function(obj){
 };
 
 util.mixBubbling = function(){
-  var eventNames = ["change", "add", "remove"];
+  var eventNames = ["change", "add", "remove", "dom:refresh"];
   var eventTypes = ["model", "collection"];
-  // Listening for changes on the model
+// Listening for changes on the model
   function bubble(){
-    console.log(this);
-    var args = Array.prototype.slice.call(arguments, 1);
-    args.unshift(this.collection);
-    args.unshift(eventName);
-    this.trigger.apply(this, args);
-  };
+    var capEventName = eventName;
+    var capEventType = eventType;
+    return function(){
+      console.log(this);
+      var args = Array.prototype.slice.call(arguments);
+      this.collection && args.push(this.collection);
+      args.unshift(capEventName);
+      this.trigger.apply(this, args);
+    }
+  }
 
   for(var j=0; j<eventTypes.length; j++){
     var eventType = eventTypes[j];
-    this[eventType] && this[eventType].on("dom:refresh", bubble.bind(this));
     for(var i=0; i<eventNames.length; i++){
       var eventName = eventNames[i]
-      var eventName = eventType + ":" + eventNames[i];
-      this[eventType] && this[eventType].on(eventName, bubble.bind(this));
+      var eventName = eventName === "dom:refresh" ? eventName : eventType + ":" + eventName;
+      if(this[eventType]){
+        var closureBubble = bubble();
+        this[eventType] && this[eventType].on(eventName, closureBubble.bind(this));
+      }
     }
   }
 };
