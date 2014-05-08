@@ -54,14 +54,18 @@ framework.mixItemView = function(obj){
 
   obj.remove = obj.remove || function(){
     var model = arguments[0];
-    this._cachedTemplate.parentNode.removeChild(this._cachedTemplate);
-    delete this.model;
-    console.log("DOM instance deleted of: ", model.id);
+    var parentNode = this._cachedTemplate.parentNode
+    parentNode.removeChild(this._cachedTemplate);
+    parentNode.appendChild(this.render());
+    //***** 
+    //1) Remove listeners from view that was deleted
+    // 2) remove
+    //delete this.model;
   };
 
   obj.refreshDOM = obj.refreshDOM || function(){
     var model = arguments[0];
-    (this.model || this.collection) === model && this.remove(model)
+    this.remove(model)
   };
 
   // add event system if not already present
@@ -87,7 +91,7 @@ framework.mixCollectionView = function(obj){
   };
 
   obj.iterateItemViewCollection = function(callback){
-    this.itemViewCollection || this.createItemViewCollection();
+    this.createItemViewCollection();
     var args = Array.prototype.slice(0);
     for(var i=0; i<this.itemViewCollection.length; i++){
       var itemView = this.itemViewCollection[i];
@@ -95,10 +99,6 @@ framework.mixCollectionView = function(obj){
       callback.apply(this, args);
       args.shift();
     };
-  };
-
-  if(obj.render){
-   console.log("Render present");
   };
 
   obj.render = obj.render || function(){
@@ -116,13 +116,13 @@ framework.mixCollectionView = function(obj){
     return this._cachedTemplate;
   };
 
-  obj.remove = obj.remove || function(){
-    this.iterateItemViewCollection(function(itemView){
-      var model = arguments[0];
-      itemView === model && delete itemView;
-      console.log("View of Item deleted in ItemViewCollection: ", model.id);
-    })
-  };
+  //obj.remove = obj.remove || function(){
+   // this.iterateItemViewCollection(function(itemView){
+    //  var model = arguments[0];
+     // itemView === model && delete itemView;
+     // console.log("View of Item deleted in ItemViewCollection: ", model.id);
+    //})
+  //};
 
   obj = framework.mixItemView(obj);
 

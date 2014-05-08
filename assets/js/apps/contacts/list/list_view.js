@@ -12,7 +12,6 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, framewo
     deleteClicked: function(e){
       e.preventDefault();
       e.stopPropagation();
-      console.log(this.model.id);
       this.trigger("contact:delete", this.model);
     }
   });

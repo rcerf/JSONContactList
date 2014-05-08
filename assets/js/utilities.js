@@ -148,7 +148,6 @@ util.mixBubbling = function(){
     var capEventName = eventName;
     var capEventType = eventType;
     return function(){
-      console.log(this);
       var args = Array.prototype.slice.call(arguments);
       this.collection && args.push(this.collection);
       args.unshift(capEventName);
