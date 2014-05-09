@@ -43,10 +43,17 @@ util.template = function(model, node){
   var result = [];
 
   interpolatedString.replace(elementTagRe, function(match, variable, offset, string){
-    variable = variable.trim();
+    var className = variable.match(/="([\s\S]+?)"/im);
+    if(className){
+      console.log("test");
+    }
+    variable = variable.trim().split(" ").slice(0,1).join("");
     if(variable[0] !== "/"){
       if(!currentElement){
         currentElement = document.createElement(variable);
+        if(className){
+          currentElement.className = className[1];
+        }
         last = offset + match.length;
         lastVariable = variable;
       }

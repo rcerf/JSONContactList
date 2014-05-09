@@ -12,6 +12,7 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, framewo
       });
 
       ContactManager.mainRegion.show(contactsListView);
+      ContactManager.importRegion.show(List.Import);
     }
   });
 });

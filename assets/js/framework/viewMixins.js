@@ -34,12 +34,16 @@ framework.mixItemView = function(obj){
 
   obj.createEl = function(){
     //render childNodes
-    var childNodes = util.template(this.model, this._selectedTemplate);
+    var childNodes = util.template(this.model || {}, this._selectedTemplate);
 
+    if(!this.model){
+      console.log("test");
+    }
     for(var i = 0; i<childNodes.length; i++){
       if(this._events){
         util.bindDOMEventListeners(this, childNodes[i]);
       };
+
       //build el tree from childNodes
       this._cachedTemplate.appendChild(childNodes[i]);
     };
@@ -48,7 +52,7 @@ framework.mixItemView = function(obj){
   obj.render = obj.render || function(){
     this.template ? this.createSelectedTemplate() : console.log("Must set template attribute on view");
     this.createCachedTemplate();
-    this.model ? this.createEl() : console.log("Must set model on view.")
+    this.createEl();
     return this._cachedTemplate;
   };
 
@@ -76,9 +80,9 @@ framework.mixCollectionView = function(obj){
   obj = obj || {};
 
   obj.createItemViewCollection = function(){
-    var models = this.collection.get("modelCollection");
+    var models = this.collection && this.collection.get("modelCollection");
     this.itemViewCollection = [];
-
+    models = models || {0:{}};
     for(var key in models){
       var tempItemView = framework.mixItemView({model: models[key]}, this.itemView)
       //save a collection of itemViews in the CollectionView
