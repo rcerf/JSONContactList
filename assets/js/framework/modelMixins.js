@@ -19,6 +19,12 @@ framework.mixModel = function(obj){
     return this[propertyName];
   };
 
+  obj.remove = obj.remove || function(model){
+    var model = this.modelCollection ? this.modelCollection[model.id] : this;
+    this.modelCollection ? delete this.modelCollection[model.id]: delete this
+    this.refreshDOM(model);
+  };
+
   obj.refreshDOM = obj.refreshDOM || function(){
     var args = Array.prototype.slice.call(arguments);
     args.unshift("dom:refresh");
@@ -51,12 +57,6 @@ framework.mixCollection = function(obj){
   };
 
   obj = obj || {};
-
-  obj.remove = function(model){
-    var model = this.modelCollection[model.id];
-    delete this.modelCollection[model.id];
-    this.refreshDOM(model);
-  };
 
   obj.createCollection = function(arr){
     if(!this.hasOwnProperty("model")){

@@ -13,7 +13,8 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, framewo
       e.preventDefault();
       e.stopPropagation();
       this.trigger("contact:delete", this.model);
-    }
+    },
+    
   });
 
 

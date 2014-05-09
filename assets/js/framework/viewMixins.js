@@ -53,14 +53,10 @@ framework.mixItemView = function(obj){
   };
 
   obj.remove = obj.remove || function(){
-    var model = arguments[0];
-    var parentNode = this._cachedTemplate.parentNode
+    var parentNode = this._cachedTemplate.parentNode;
     parentNode.removeChild(this._cachedTemplate);
-    parentNode.appendChild(this.render());
-    //***** 
-    //1) Remove listeners from view that was deleted
-    // 2) remove
-    //delete this.model;
+    //stop listening???
+    return this;
   };
 
   obj.refreshDOM = obj.refreshDOM || function(){
@@ -114,6 +110,17 @@ framework.mixCollectionView = function(obj){
     });
 
     return this._cachedTemplate;
+  };
+
+  obj.remove = obj.remove || function(){
+    var model = arguments[0];
+    var parentNode = this._cachedTemplate.parentNode
+    parentNode.removeChild(this._cachedTemplate);
+    parentNode.appendChild(this.render());
+    //***** 
+    //1) Remove listeners from view that was deleted
+    // 2) remove
+    //delete this.model;
   };
 
   obj = framework.mixItemView(obj);
